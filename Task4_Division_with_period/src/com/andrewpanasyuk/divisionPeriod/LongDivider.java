@@ -2,7 +2,6 @@ package com.andrewpanasyuk.divisionPeriod;
 
 import java.util.ArrayList;
 
-
 public class LongDivider {
 	private ColumnDivision columnDivision;
 
@@ -26,30 +25,27 @@ public class LongDivider {
 		ArrayList<String> partsOfDividends = partitionDividend(dividend,
 				Math.abs(divisor));
 		ArrayList<String> historyDivision = new ArrayList<>();
-		
+
 		for (String partsOfDividend : partsOfDividends) {
-            int pieceOfDividend = Integer.valueOf(rest
-                    + partsOfDividend);
-			int quotientByInt = pieceOfDividend / Math.abs(divisor);
-			int deduction = quotientByInt * Math.abs(divisor);
-			rest = String.valueOf(pieceOfDividend - deduction);
-			quotient += String.valueOf(quotientByInt);
+			int pieceOfDividend = Integer.valueOf(rest + partsOfDividend);
+			ArrayList<String> resultOfDivision = getResultsOfDivision(
+					pieceOfDividend, Math.abs(divisor));
+			rest = resultOfDivision.get(0);
+			quotient += resultOfDivision.get(1);
 			historyDivision.add(String.valueOf(pieceOfDividend));
-			historyDivision.add(String.valueOf(deduction));
+			historyDivision.add(resultOfDivision.get(2));
 		}
-		
-		
+
 		if (!rest.equals("0")) {
 			ArrayList<String> historyOfRemainderDivision = createHistoryOfRemainderDivision(
 					rest, divisor);
-			quotient += "." + historyOfRemainderDivision.get(0);
-			historyOfRemainderDivision.remove(0);
-			historyDivision = joinHistories(historyDivision, historyOfRemainderDivision);
+			quotient += historyOfRemainderDivision.get(0);
+			historyDivision = joinHistories(historyDivision,
+					historyOfRemainderDivision);
 		} else {
 			historyDivision.add(rest);
 		}
-		
-		
+
 		if (checkCorrectSign(dividend, divisor) < 0) {
 			quotient = "-" + quotient;
 		}
@@ -58,7 +54,7 @@ public class LongDivider {
 		historyDivision.add(0, dividendByString);
 		return historyDivision;
 	}
-	
+
 	private ArrayList<String> partitionDividend(int dividend, int divisor) {
 		String dividendByString = String.valueOf(Math.abs(dividend));
 		String firstPartOfDividend = findPieceOfDividend(Math.abs(dividend),
@@ -73,7 +69,7 @@ public class LongDivider {
 		}
 		return partsOfDividends;
 	}
-	
+
 	private ArrayList<String> createHistoryOfRemainderDivision(
 			String dividendByString, int divisor) {
 		ArrayList<String> listDividends = new ArrayList<>();
@@ -83,34 +79,47 @@ public class LongDivider {
 		historyOfRestDivision.add(dividendByString + "0");
 		int maxIndexAfterPoint = 0;
 		while (!dividendByString.equals("0") || maxIndexAfterPoint >= 10) {
-			
+
 			int dividendByInt = Integer.valueOf(dividendByString + "0");
-			int quotientByInt = dividendByInt / Math.abs(divisor);
-			int deduction = quotientByInt * Math.abs(divisor);
-			dividendByString = String.valueOf(dividendByInt - deduction);
-			quotient += String.valueOf(quotientByInt);
+			ArrayList<String> resultOfDivision = getResultsOfDivision(
+					dividendByInt, Math.abs(divisor));
+			dividendByString = resultOfDivision.get(0);
+			quotient += resultOfDivision.get(1);
 			historyOfRestDivision.add(String.valueOf(dividendByInt));
-			historyOfRestDivision.add(String.valueOf(deduction));
-	
+			historyOfRestDivision.add(resultOfDivision.get(2));
+
 			if (listDividends.contains(dividendByString)) {
 				int startIndex = listDividends.indexOf(dividendByString);
 				quotient = quotient.substring(0, startIndex) + "("
 						+ quotient.substring(startIndex) + ")";
 				historyOfRestDivision.add(dividendByString);
-				historyOfRestDivision.set(0, quotient);
+				historyOfRestDivision.set(0, "." + quotient);
 				return historyOfRestDivision;
-	
 			}
 			listDividends.add(dividendByString);
 			maxIndexAfterPoint++;
 		}
 		historyOfRestDivision.add(dividendByString);
-		historyOfRestDivision.set(0, quotient);
+		historyOfRestDivision.set(0, "." + quotient);
 		return historyOfRestDivision;
+
+	}
 	
+	private ArrayList<String> getResultsOfDivision(int dividend, int divisor) {
+		ArrayList<String> resultOfDivision = new ArrayList<String>();
+		int pieceOfDividend = Integer.valueOf(dividend);
+		int quotientByInt = pieceOfDividend / divisor;
+		int deduction = quotientByInt * divisor;
+		String rest = String.valueOf(pieceOfDividend - deduction);
+		resultOfDivision.add(rest);
+		resultOfDivision.add(String.valueOf(quotientByInt));
+		resultOfDivision.add(String.valueOf(deduction));
+		return resultOfDivision;
 	}
 
-	private ArrayList<String> joinHistories (ArrayList<String> historyDivision, ArrayList<String> historyOfRemainderDivision){
+	private ArrayList<String> joinHistories(ArrayList<String> historyDivision,
+			ArrayList<String> historyOfRemainderDivision) {
+		historyOfRemainderDivision.remove(0);
 		if (historyDivision.get(1).equals("0")) {
 			historyDivision.remove(1);
 			historyOfRemainderDivision.remove(0);
@@ -118,7 +127,7 @@ public class LongDivider {
 		} else {
 			historyDivision.addAll(historyOfRemainderDivision);
 		}
-	return historyDivision;
+		return historyDivision;
 	}
 
 	private String findPieceOfDividend(int dividend, int divisor) {
