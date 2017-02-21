@@ -9,13 +9,12 @@ public class ColumnDivision {
 	private final String HORIZONTAL_SPLITTER = "-";
 	private final String KNOT_SPLITTER = "+";
 	private final String EMPTY_POSITION = " ";
-	private final String MINUS = "-";
 
 	public String getFullDivisionColumn(ArrayList<String> history) {
 		String dividend = history.get(0);
 		String partOfDividend = history.get(3);
 		int shift = Math.max(partOfDividend.length(), history.get(4).length());
-		if (dividend.contains(MINUS)) {
+		if (dividend.contains("-")) {
 			shift++;
 		}
 		String resultColumn = getHeadColumn(history, shift);
