@@ -14,7 +14,7 @@ public class TestDivision {
 	private String actual;
 
 	@Test
-	public void testDivision1() {
+	public void testDivisionWithoutRest() {
 		dividend = 8;
 		divisor = 2;
 		expected = "8|2\n" + "8+-\n" + "-|4\n" + "0";
@@ -23,7 +23,7 @@ public class TestDivision {
 	}
 
 	@Test
-	public void testDivision2() {
+	public void testDivisionWithRest() {
 		dividend = 129;
 		divisor = 4;
 		expected = "129|4\n" + "12 +-----\n" + "-- |32.25\n" + "  9\n"
@@ -34,7 +34,7 @@ public class TestDivision {
 	}
 
 	@Test(expected = ArithmeticException.class)
-	public void testDivision3() {
+	public void testDivisionByZero() {
 		dividend = 89;
 		divisor = 0;
 		longDivider = new LongDivider();
@@ -42,7 +42,7 @@ public class TestDivision {
 	}
 
 	@Test
-	public void testDivision4() {
+	public void testDivisionWithPeriod() {
 		dividend = 1000;
 		divisor = 3;
 		expected = "1000|3\n" + " 9  +-------\n" + "--  |333.(3)\n" + " 10\n" + "  9\n"
@@ -52,7 +52,7 @@ public class TestDivision {
 	}
 
 	@Test
-	public void testDivision5() {
+	public void testSignsDividendWithMinus() {
 		dividend = -819;
 		divisor = 52;
 		expected = "-819|52\n" + " 52 +------\n" + " -- |-15.75\n" + " 299\n"
@@ -62,7 +62,7 @@ public class TestDivision {
 	}
 
 	@Test
-	public void testDivision6() {
+	public void testSignsDividendAndDivisorWithMinus() {
 		dividend = -819;
 		divisor = -52;
 		expected = "-819|-52\n" + " 52 +-----\n" + " -- |15.75\n" + " 299\n"
@@ -72,10 +72,10 @@ public class TestDivision {
 	}
 
 	@Test
-	public void testDivision7() {
+	public void testDivisorMoreDividend() {
 		dividend = 7;
-		divisor = -12;
-		expected = "7 |-12\n" + "60+--------\n" + "--|-0.58(3)\n" + "100\n" + " 96\n"
+		divisor = 12;
+		expected = "7 |12\n" + "60+-------\n" + "--|0.58(3)\n" + "100\n" + " 96\n"
 				+ "---\n" + "  40\n" + "  36\n" + "  --\n" + "   4";
 		actual = longDivider.showLongDivision(dividend, divisor);
 		assertEquals(expected, actual);
